@@ -2,7 +2,7 @@ import json
 import hashlib
 import numpy as np
 from typing import List, Dict, Set, Tuple
-from pybloom_live import BloomFilter
+#from pybloom_live import BloomFilter
 
 def read_json(file_path: str) -> List[Dict]:
     """Read JSON file and return its content."""
@@ -48,8 +48,9 @@ def build_graph(events: List[Dict], psi: Set[str]) -> Tuple[List[str], np.ndarra
             if not event_i_attributes.isdisjoint(event_j_attributes):
                 edge_matrix[i, j] = 1
                 edge_matrix[j, i] = 1
-    
-    return event_uuids, edge_matrix
+    edge_matrix_enc = generate_event_correlations((event_uuids, edge_matrix))
+
+    return event_uuids, edge_matrix_enc
 
 def generate_event_correlations(graph: Tuple[List[str], np.ndarray]) -> Set[str]:
     """
@@ -80,7 +81,7 @@ def generate_event_correlations(graph: Tuple[List[str], np.ndarray]) -> Set[str]
                 
                 # Add the hashed value to the set of correlations
                 correlations.add(hash_value)
-    
+                    
     return correlations
 
 
@@ -93,22 +94,22 @@ def main():
     events_p = read_json(file_path1)
     events_c = read_json(file_path2)
 
-    # Compute PSI1
-    psi_p = set()
+    # Compute PSI
+    ps_p = set()
     for event in events_p:
-        psi_p.update(hash_attribute(event['attributes']))
+        ps_p.update(hash_attribute(event['attributes']))
 
-    psi_c = set()
+    ps_c = set()
     for event in events_c:
-        psi_c.update(hash_attribute(event['attributes']))
+        ps_c.update(hash_attribute(event['attributes']))
  
-    psi = find_intersection(psi_p, psi_c)
+    psi = find_intersection(ps_p, ps_c)
     # Build correlation graphs
-    graph1 = build_graph(events_p, psi)
-    graph2 = build_graph(events_c, psi)
+    graph_p = build_graph(events_p, psi)
+    graph_c = build_graph(events_c, psi)
 
-    enc1 = generate_event_correlations(graph1)
-    print(enc1)
+    print(graph_p)
+    print(graph_c)
 
 if __name__ == "__main__":
     main()
