@@ -2,7 +2,6 @@ import json
 import hashlib
 import numpy as np
 from typing import List, Dict, Set, Tuple
-#from pybloom_live import BloomFilter
 
 def read_json(file_path: str) -> List[Dict]:
     """Read JSON file and return its content."""
@@ -83,6 +82,9 @@ def generate_event_correlations(graph: Tuple[List[str], np.ndarray]) -> Set[str]
                 correlations.add(hash_value)
                     
     return correlations
+
+def compute_private_graph_intersection(correlations_p: Set[str], correlations_c: Set[str]) -> Set[str]:
+    return correlations_p.intersection(correlations_c)
 
 
 def main():

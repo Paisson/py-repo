@@ -1,0 +1,30 @@
+[
+    {
+        "uuid": "producer-event1",
+        "attributes": {
+            "ip_address": "192.168.1.1",
+            "port_number": 8080
+        }
+    },
+    {
+        "uuid": "producer-event2",
+        "attributes": {
+            "ip_address": "192.168.2.3",
+            "port_number": 8100
+        }
+    },
+    {
+        "uuid": "producer-event3",
+        "attributes": {
+            "ip_address": "192.168.1.",
+            "port_number": 8020
+        }
+    },
+    {
+        "uuid": "producer-event4",
+        "attributes": {
+            "ip_address": "192.168.1.1",
+            "port_number": 8080
+        }
+    }
+]
