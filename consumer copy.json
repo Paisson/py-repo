@@ -1,0 +1,30 @@
+[
+    {
+        "uuid": "consumer-event1",
+        "attributes": {
+            "ip_address": "192.168.1.1",
+            "port_number": 8080
+        }
+    },
+    {
+        "uuid": "consumer-event2",
+        "attributes": {
+            "ip_address": "192.168.2.31",
+            "port_number": 8101
+        }
+    },
+    {
+        "uuid": "consumer-event3",
+        "attributes": {
+            "ip_address": "192.168.1.61",
+            "port_number": 8021
+        }
+    },
+    {
+        "uuid": "consumer-event4",
+        "attributes": {
+            "ip_address": "192.168.1.1",
+            "port_number": 8080
+        }
+    }
+]
