@@ -15,24 +15,12 @@
             "value": "192.168.1.1",
             "uuid": "attr-uuid-1",
             "category": "Network activity"
-          },
-          {
-            "type": "domain",
-            "value": "example-consumer.com",
-            "uuid": "attr-uuid-17",
-            "category": "Network activity"
-          },
-          {
-            "type": "email-src",
-            "value": "consumer@example.com",
-            "uuid": "attr-uuid-18",
-            "category": "Payload delivery"
           }
         ]
       },
       {
         "id": "7",
-        "uuid": "uuid-consumer-2",
+        "uuid": "uuid-2",
         "info": "Consumer Event 2",
         "date": "2023-10-07",
         "threat_level_id": "2",
@@ -45,18 +33,6 @@
             "value": "192.168.1.1",
             "uuid": "attr-uuid-19",
             "category": "Network activity"
-          },
-          {
-            "type": "email-dst",
-            "value": "recipient@example.com",
-            "uuid": "attr-uuid-20",
-            "category": "Payload delivery"
-          },
-          {
-            "type": "filename",
-            "value": "ransomware.exe",
-            "uuid": "attr-uuid-21",
-            "category": "Artifacts dropped"
           }
         ]
       },
@@ -93,12 +69,6 @@
             "value": "victim2@example.com",
             "uuid": "attr-uuid-26",
             "category": "Payload delivery"
-          },
-          {
-            "type": "filename",
-            "value": "spyware.exe",
-            "uuid": "attr-uuid-27",
-            "category": "Artifacts dropped"
           }
         ]
       },
@@ -113,9 +83,45 @@
         },
         "Attribute": [
           {
+            "type": "ip-src",
+            "value": "192.168.1.2",
+            "uuid": "attr-uuid-10",
+            "category": "Network activity"
+          }
+        ]
+      },
+      {
+        "id": "6",
+        "uuid": "uuid-6",
+        "info": "Producer Event 6",
+        "date": "2023-10-05",
+        "threat_level_id": "2",
+        "orgc": {
+          "name": "Producer Organization"
+        },
+        "Attribute": [
+          {
             "type": "domain",
-            "value": "test-consumer.com",
-            "uuid": "attr-uuid-29",
+            "value": "another_example-test.com",
+            "uuid": "attr-uuid-27",
+            "category": "Network activity"
+          }
+        ]
+      },
+      {
+        "id": "7",
+        "uuid": "uuid-7",
+        "info": "Producer Event 7",
+        "date": "2023-10-05",
+        "threat_level_id": "2",
+        "orgc": {
+          "name": "Producer Organization"
+        },
+        "Attribute": [
+          {
+            "type": "domain",
+            "value": "example-test.com",
+            "uuid": "attr-uuid-28",
             "category": "Network activity"
           }
         ]

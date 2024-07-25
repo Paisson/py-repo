@@ -131,21 +131,6 @@ def find_new_correlations(
     events: List[Event],
 ) -> List[Tuple[str, Attributes]]:
     new_correlations = []
-    for event in events:
-        for attribute in event.get_attributes():
-            if attribute.hash in psi1:
-                correlation_string = f"{attribute.type}:{attribute.value}:{event.uuid}"
-                hash_value = hashlib.md5(correlation_string.encode()).hexdigest()
-                if hash_value in bloom_filter:
-                    print(f'Correlation {attribute.type}:{attribute.value}:{event.uuid} in Bloomfilter') 
-    return new_correlations
-
-def find_new_correlations(
-    bloom_filter: BloomFilter, 
-    psi1: Set[str], 
-    events: List[Event],
-) -> List[Tuple[str, Attributes]]:
-    new_correlations = []
 
     # First, create a list of all consumer attributes that are in psi1
     consumer_attributes_in_psi1 = [attr for event in events for attr in event.get_attributes() if attr.hash in psi1]
@@ -162,21 +147,18 @@ def find_new_correlations(
     # TODO Only add real new correlation to return not the one that is already events_c
     return new_correlations
 
-def compute_psi3(events_p: List[Event], events_c: List[Event], psi1: Set[str]) -> Set[str]:
+def compute_psi3(events_p: List[Event], events_c: List[Event]) -> Set[str]:
     """Compute the PSI3 for non-shared events' UUIDs."""
     uuid_set_p = {event.uuid for event in events_p}
     uuid_set_c = {event.uuid for event in events_c}
 
-    # Only keep the UUIDs that were not part of PSI1
-    non_shared_uuids_p = uuid_set_p - {event.uuid for event in events_p if any(attr.hash in psi1 for attr in event.get_attributes())}
-    non_shared_uuids_c = uuid_set_c - {event.uuid for event in events_c if any(attr.hash in psi1 for attr in event.get_attributes())}
-
     # Compute PSI3
-    psi3 = non_shared_uuids_p.intersection(non_shared_uuids_c)
+    psi3 = uuid_set_p.intersection(uuid_set_c)
 
     return psi3
 
 def build_bloom_filter_for_non_shared_psi(
+    psi1: Set[str],
     psi3: Set[str],
     events: List[Event],
     capacity: int,
@@ -185,18 +167,48 @@ def build_bloom_filter_for_non_shared_psi(
     """Build a Bloom filter for correlated events with non-shared attributes not in PSI1."""
     bf = BloomFilter(capacity=capacity, error_rate=error_rate)
 
+    # Go through each event in the producer's set
     for event in events:
-        if event.uuid in psi3:
-            for attribute in event.get_attributes():
-                related_events = [e for e in events if attribute.hash in psi3 and e.uuid in psi3]
+        if event.uuid in psi3:  # Check if event is part of psi3
+            attributes_not_in_psi1 = {attr.hash for attr in event.get_attributes() if attr.hash not in psi1}
+            
+            for other_event in events:
+                if other_event.uuid != event.uuid and other_event.uuid in psi3:  # Ensure different event and part of psi3
+                    other_attributes_not_in_psi1 = {attr.hash for attr in other_event.get_attributes() if attr.hash not in psi1}
 
-                for i in range(len(related_events)):
-                    for j in range(i + 1, len(related_events)):
-                        correlation_string = f"{related_events[i].uuid}:{related_events[j].uuid}"
+                    # Check for common attributes between event and other_event, both not shared in psi1
+                    common_attributes = attributes_not_in_psi1.intersection(other_attributes_not_in_psi1)
+                    if common_attributes:
+                        correlation_string = f"{event.uuid}:{other_event.uuid}"
                         hash_value = hashlib.md5(correlation_string.encode()).hexdigest()
                         bf.add(hash_value)
 
     return bf
+
+def find_new_correlations_for_psi3(
+    bloom_filter: BloomFilter, 
+    psi3: Set[str], 
+    events: List[Event]
+) -> List[Tuple[str, str]]:
+    """Find new correlations by computing the pairwise hashes for event UUIDs in psi3 and checking against the Bloom filter."""
+    new_correlations = []
+
+    # Get the events that are in psi3
+    events_in_psi3 = [event for event in events if event.uuid in psi3]
+
+    # Check all pairs of events within psi3
+    for i in range(len(events_in_psi3)):
+        for j in range(i + 1, len(events_in_psi3)):
+            event_i = events_in_psi3[i]
+            event_j = events_in_psi3[j]
+            
+            correlation_string = f"{event_i.uuid}:{event_j.uuid}"
+            hash_value = hashlib.md5(correlation_string.encode()).hexdigest()
+            
+            if hash_value in bloom_filter:
+                new_correlations.append((event_i.uuid, event_j.uuid))
+
+    return new_correlations
 
 def main():
     # Paths to the JSON files
@@ -238,6 +250,20 @@ def main():
     print("New Correlations Discovered:")
     for attribute_type, attribute_value, event_uuid in new_correlations:
         print(f"Attribute Type: {attribute_type}, Attribute Value: {attribute_value}, Event UUID: {event_uuid}")
+        
+
+    psi3 = compute_psi3(events_p, events_c)
+    # Build bloom filter for non-shared PSI
+    non_shared_bloom_filter = build_bloom_filter_for_non_shared_psi(psi1, psi3, events_p, capacity=len(ps_p) * 10, error_rate=0.01)
+    print("Number of Attributes in Non-Shared Bloom Filter:")
+    print(len(non_shared_bloom_filter))
+    
+    # Find new correlations from the non-shared PSI Bloom filter
+    new_non_shared_correlations = find_new_correlations_for_psi3(non_shared_bloom_filter, psi3, events_c)
+
+    print("New Non-Shared Correlations Discovered:")
+    for uuid_i, uuid_j in new_non_shared_correlations:
+        print(f"Event UUID1: {uuid_i}, Event UUID2: {uuid_j}")
 
 
 if __name__ == "__main__":

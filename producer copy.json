@@ -15,24 +15,12 @@
             "value": "192.168.1.1",
             "uuid": "attr-uuid-1",
             "category": "Network activity"
-          },
-          {
-            "type": "domain",
-            "value": "example-producer.com",
-            "uuid": "attr-uuid-2",
-            "category": "Network activity"
-          },
-          {
-            "type": "email-src",
-            "value": "producer@example.com",
-            "uuid": "attr-uuid-3",
-            "category": "Payload delivery"
           }
         ]
       },
       {
         "id": "2",
-        "uuid": "uuid-producer-2",
+        "uuid": "uuid-2",
         "info": "Producer Event 2",
         "date": "2023-10-02",
         "threat_level_id": "2",
@@ -41,22 +29,10 @@
         },
         "Attribute": [
           {
-            "type": "ip-dst",
-            "value": "10.0.0.1",
+            "type": "ip-src",
+            "value": "192.168.1.1",
             "uuid": "attr-uuid-4",
             "category": "Network activity"
-          },
-          {
-            "type": "email-dst",
-            "value": "victim@example.com",
-            "uuid": "attr-uuid-5",
-            "category": "Payload delivery"
-          },
-          {
-            "type": "filename",
-            "value": "malware.exe",
-            "uuid": "attr-uuid-6",
-            "category": "Artifacts dropped"
           }
         ]
       },
@@ -72,21 +48,9 @@
         "Attribute": [
           {
             "type": "ip-src",
-            "value": "192.168.1.3",
+            "value": "192.168.1.2",
             "uuid": "attr-uuid-7",
             "category": "Network activity"
-          },
-          {
-            "type": "domain",
-            "value": "another-example.com",
-            "uuid": "attr-uuid-8",
-            "category": "Network activity"
-          },
-          {
-            "type": "email-src",
-            "value": "alert@example.com",
-            "uuid": "attr-uuid-9",
-            "category": "Payload delivery"
           }
         ]
       },
@@ -102,34 +66,16 @@
         "Attribute": [
           {
             "type": "ip-src",
-            "value": "192.168.1.1",
+            "value": "192.168.1.2",
             "uuid": "attr-uuid-10",
             "category": "Network activity"
-          },
-          {
-            "type": "email-dst",
-            "value": "test@example.com",
-            "uuid": "attr-uuid-11",
-            "category": "Payload delivery"
-          },
-          {
-            "type": "filename",
-            "value": "trojan.exe",
-            "uuid": "attr-uuid-12",
-            "category": "Artifacts dropped"
-          },
-          {
-            "type": "email-src",
-            "value": "producer@example.com",
-            "uuid": "attr-uuid-34",
-            "category": "Payload delivery"
           }
         ]
       },
       {
-        "id": "5",
-        "uuid": "uuid-5",
-        "info": "Producer Event 5",
+        "id": "6",
+        "uuid": "uuid-6",
+        "info": "Producer Event 6",
         "date": "2023-10-05",
         "threat_level_id": "2",
         "orgc": {
@@ -141,18 +87,24 @@
             "value": "192.168.1.3",
             "uuid": "attr-uuid-13",
             "category": "Network activity"
-          },
+          }
+        ]
+      },
+      {
+        "id": "7",
+        "uuid": "uuid-7",
+        "info": "Producer Event 7",
+        "date": "2023-10-05",
+        "threat_level_id": "2",
+        "orgc": {
+          "name": "Producer Organization"
+        },
+        "Attribute": [
           {
-            "type": "domain",
-            "value": "example-test.com",
-            "uuid": "attr-uuid-14",
+            "type": "ip-src",
+            "value": "192.168.1.3",
+            "uuid": "attr-uuid-13",
             "category": "Network activity"
-          },
-          {
-            "type": "email-src",
-            "value": "notify@example.com",
-            "uuid": "attr-uuid-15",
-            "category": "Payload delivery"
           }
         ]
       }
