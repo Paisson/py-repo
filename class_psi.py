@@ -128,11 +128,19 @@ def build_bloom_filter_from_psi(
 def find_new_correlations(
     bloom_filter: BloomFilter, 
     psi1: Set[str], 
-    events: List[Event],
-) -> List[Tuple[str, Attributes]]:
+    events: List[Event]
+) -> List[Tuple[str, str, str]]:
     new_correlations = []
 
-    # First, create a list of all consumer attributes that are in psi1
+    # First, gather existing correlations from consumer's events
+    existing_correlations = set()
+    for event in events:
+        for attribute in event.get_attributes():
+            correlation_string = f"{attribute.type}:{attribute.value}:{event.uuid}"
+            hash_value = hashlib.md5(correlation_string.encode()).hexdigest()
+            existing_correlations.add(hash_value) 
+
+    # Create a list of all consumer attributes that are in psi1
     consumer_attributes_in_psi1 = [attr for event in events for attr in event.get_attributes() if attr.hash in psi1]
 
     # Iterate through the consumer's events and check for each attribute in psi1
@@ -140,11 +148,10 @@ def find_new_correlations(
         for event in events:
             correlation_string = f"{attribute.type}:{attribute.value}:{event.uuid}"
             hash_value = hashlib.md5(correlation_string.encode()).hexdigest()
-            if hash_value in bloom_filter:
+            if hash_value in bloom_filter and hash_value not in existing_correlations:
                 print(f'Correlation {attribute.type}:{attribute.value}:{event.uuid} in Bloomfilter')
                 new_correlations.append((attribute.type, attribute.value, event.uuid))
 
-    # TODO Only add real new correlation to return not the one that is already events_c
     return new_correlations
 
 def compute_psi3(events_p: List[Event], events_c: List[Event]) -> Set[str]:
@@ -243,7 +250,6 @@ def main():
     print("Number of Attribtues in BloomFilter:")
     print(len(bloom_filter))
 
-    
     # Find new correlations by iterating through the consumer's confidential attributes
     new_correlations = find_new_correlations(bloom_filter, psi1, events_c)
 
