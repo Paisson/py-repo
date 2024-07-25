@@ -2,7 +2,7 @@
     "Event": [
       {
         "id": "6",
-        "uuid": "uuid-producer-1",
+        "uuid": "uuid-1",
         "info": "Consumer Event 1",
         "date": "2023-10-06",
         "threat_level_id": "1",
@@ -13,7 +13,7 @@
           {
             "type": "ip-src",
             "value": "192.168.1.1",
-            "uuid": "attr-uuid-16",
+            "uuid": "attr-uuid-1",
             "category": "Network activity"
           },
           {
@@ -62,7 +62,7 @@
       },
       {
         "id": "8",
-        "uuid": "uuid-consumer-3",
+        "uuid": "uuid-3",
         "info": "Consumer Event 3",
         "date": "2023-10-08",
         "threat_level_id": "3",
@@ -71,34 +71,16 @@
         },
         "Attribute": [
           {
-            "type": "ip-src",
-            "value": "172.16.0.1",
-            "uuid": "attr-uuid-22",
-            "category": "Network activity"
-          },
-          {
             "type": "domain",
             "value": "sample-consumer.com",
             "uuid": "attr-uuid-23",
             "category": "Network activity"
-          },
-          {
-            "type": "email-src",
-            "value": "alert@example.com",
-            "uuid": "attr-uuid-24",
-            "category": "Payload delivery"
-          },
-          {
-            "type": "email-src",
-            "value": "producer@example.com",
-            "uuid": "attr-uuid-34",
-            "category": "Payload delivery"
           }
         ]
       },
       {
         "id": "9",
-        "uuid": "uuid-producer-4",
+        "uuid": "uuid-4",
         "info": "Consumer Event 4",
         "date": "2023-10-09",
         "threat_level_id": "1",
@@ -122,7 +104,7 @@
       },
       {
         "id": "10",
-        "uuid": "uuid-consumer-5",
+        "uuid": "uuid-5",
         "info": "Consumer Event 5",
         "date": "2023-10-10",
         "threat_level_id": "3",
@@ -131,22 +113,10 @@
         },
         "Attribute": [
           {
-            "type": "ip-src",
-            "value": "10.0.1.1",
-            "uuid": "attr-uuid-28",
-            "category": "Network activity"
-          },
-          {
             "type": "domain",
             "value": "test-consumer.com",
             "uuid": "attr-uuid-29",
             "category": "Network activity"
-          },
-          {
-            "type": "email-src",
-            "value": "notify@consumer.com",
-            "uuid": "attr-uuid-30",
-            "category": "Payload delivery"
           }
         ]
       }

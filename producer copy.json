@@ -2,7 +2,7 @@
     "Event": [
       {
         "id": "1",
-        "uuid": "uuid-producer-1",
+        "uuid": "uuid-1",
         "info": "Producer Event 1",
         "date": "2023-10-01",
         "threat_level_id": "1",
@@ -62,7 +62,7 @@
       },
       {
         "id": "3",
-        "uuid": "uuid-producer-3",
+        "uuid": "uuid-3",
         "info": "Producer Event 3",
         "date": "2023-10-03",
         "threat_level_id": "3",
@@ -72,7 +72,7 @@
         "Attribute": [
           {
             "type": "ip-src",
-            "value": "172.16.0.1",
+            "value": "192.168.1.3",
             "uuid": "attr-uuid-7",
             "category": "Network activity"
           },
@@ -92,7 +92,7 @@
       },
       {
         "id": "4",
-        "uuid": "uuid-producer-4",
+        "uuid": "uuid-4",
         "info": "Producer Event 4",
         "date": "2023-10-04",
         "threat_level_id": "3",
@@ -128,7 +128,7 @@
       },
       {
         "id": "5",
-        "uuid": "uuid-producer-5",
+        "uuid": "uuid-5",
         "info": "Producer Event 5",
         "date": "2023-10-05",
         "threat_level_id": "2",
@@ -138,7 +138,7 @@
         "Attribute": [
           {
             "type": "ip-src",
-            "value": "192.168.1.1",
+            "value": "192.168.1.3",
             "uuid": "attr-uuid-13",
             "category": "Network activity"
           },

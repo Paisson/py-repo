@@ -129,7 +129,6 @@ def find_new_correlations(
     bloom_filter: BloomFilter, 
     psi1: Set[str], 
     events: List[Event],
-    hash_to_attr_map: Dict[str, Attributes]
 ) -> List[Tuple[str, Attributes]]:
     new_correlations = []
     for event in events:
@@ -138,10 +137,66 @@ def find_new_correlations(
                 correlation_string = f"{attribute.type}:{attribute.value}:{event.uuid}"
                 hash_value = hashlib.md5(correlation_string.encode()).hexdigest()
                 if hash_value in bloom_filter:
-                    if hash_value not in hash_to_attr_map:
-                        hash_to_attr_map[hash_value] = attribute
-                    new_correlations.append((hash_value, hash_to_attr_map[hash_value]))
+                    print(f'Correlation {attribute.type}:{attribute.value}:{event.uuid} in Bloomfilter') 
     return new_correlations
+
+def find_new_correlations(
+    bloom_filter: BloomFilter, 
+    psi1: Set[str], 
+    events: List[Event],
+) -> List[Tuple[str, Attributes]]:
+    new_correlations = []
+
+    # First, create a list of all consumer attributes that are in psi1
+    consumer_attributes_in_psi1 = [attr for event in events for attr in event.get_attributes() if attr.hash in psi1]
+
+    # Iterate through the consumer's events and check for each attribute in psi1
+    for attribute in consumer_attributes_in_psi1:
+        for event in events:
+            correlation_string = f"{attribute.type}:{attribute.value}:{event.uuid}"
+            hash_value = hashlib.md5(correlation_string.encode()).hexdigest()
+            if hash_value in bloom_filter:
+                print(f'Correlation {attribute.type}:{attribute.value}:{event.uuid} in Bloomfilter')
+                new_correlations.append((attribute.type, attribute.value, event.uuid))
+
+    # TODO Only add real new correlation to return not the one that is already events_c
+    return new_correlations
+
+def compute_psi3(events_p: List[Event], events_c: List[Event], psi1: Set[str]) -> Set[str]:
+    """Compute the PSI3 for non-shared events' UUIDs."""
+    uuid_set_p = {event.uuid for event in events_p}
+    uuid_set_c = {event.uuid for event in events_c}
+
+    # Only keep the UUIDs that were not part of PSI1
+    non_shared_uuids_p = uuid_set_p - {event.uuid for event in events_p if any(attr.hash in psi1 for attr in event.get_attributes())}
+    non_shared_uuids_c = uuid_set_c - {event.uuid for event in events_c if any(attr.hash in psi1 for attr in event.get_attributes())}
+
+    # Compute PSI3
+    psi3 = non_shared_uuids_p.intersection(non_shared_uuids_c)
+
+    return psi3
+
+def build_bloom_filter_for_non_shared_psi(
+    psi3: Set[str],
+    events: List[Event],
+    capacity: int,
+    error_rate: float
+) -> BloomFilter:
+    """Build a Bloom filter for correlated events with non-shared attributes not in PSI1."""
+    bf = BloomFilter(capacity=capacity, error_rate=error_rate)
+
+    for event in events:
+        if event.uuid in psi3:
+            for attribute in event.get_attributes():
+                related_events = [e for e in events if attribute.hash in psi3 and e.uuid in psi3]
+
+                for i in range(len(related_events)):
+                    for j in range(i + 1, len(related_events)):
+                        correlation_string = f"{related_events[i].uuid}:{related_events[j].uuid}"
+                        hash_value = hashlib.md5(correlation_string.encode()).hexdigest()
+                        bf.add(hash_value)
+
+    return bf
 
 def main():
     # Paths to the JSON files
@@ -173,23 +228,17 @@ def main():
 
     # Create and fill the Bloom filter with the appropriate attributes
     bloom_filter = build_bloom_filter_from_psi(psi1, psi2, events_p, capacity=len(ps_p) * 10, error_rate=0.01)
-    print("Bloom Filter with Attributes from PSI1 not in PSI2:")
+    print("Number of Attribtues in BloomFilter:")
+    print(len(bloom_filter))
 
-    # Hash to attribute map for the consumer
-    consumer_hash_to_attr_map = {}
     
     # Find new correlations by iterating through the consumer's confidential attributes
-    new_correlations = find_new_correlations(bloom_filter, psi1, events_c, consumer_hash_to_attr_map)
+    new_correlations = find_new_correlations(bloom_filter, psi1, events_c)
 
     print("New Correlations Discovered:")
-    for hash_value, attribute in new_correlations:
-        print(f"Hash: {hash_value}, Attribute: {attribute.type}, Value: {attribute.value}, UUID: {attribute.uuid}")
+    for attribute_type, attribute_value, event_uuid in new_correlations:
+        print(f"Attribute Type: {attribute_type}, Attribute Value: {attribute_value}, Event UUID: {event_uuid}")
 
-    # Consumer can access its own hash-to-attribute map
-    for hash_value, attribute in new_correlations:
-        if hash_value in consumer_hash_to_attr_map:
-            attribute = consumer_hash_to_attr_map[hash_value]
-            print(f"Details for Hash {hash_value} - Attribute: {attribute.type}, Value: {attribute.value}, UUIDs: {[e.uuid for e in attribute.parents]}")
 
 if __name__ == "__main__":
     main()
