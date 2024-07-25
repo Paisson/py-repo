@@ -1,30 +1,160 @@
-[
-    {
-        "uuid": "producer-event1",
-        "attributes": {
-            "ip_address": "192.168.1.1",
-            "port_number": 8080
-        }
-    },
-    {
-        "uuid": "producer-event2",
-        "attributes": {
-            "ip_address": "192.168.2.3",
-            "port_number": 8100
-        }
-    },
-    {
-        "uuid": "producer-event3",
-        "attributes": {
-            "ip_address": "192.168.1.",
-            "port_number": 8020
-        }
-    },
-    {
-        "uuid": "producer-event4",
-        "attributes": {
-            "ip_address": "192.168.1.1",
-            "port_number": 8080
-        }
-    }
-]
+{
+    "Event": [
+      {
+        "id": "1",
+        "uuid": "uuid-producer-1",
+        "info": "Producer Event 1",
+        "date": "2023-10-01",
+        "threat_level_id": "1",
+        "orgc": {
+          "name": "Producer Organization"
+        },
+        "Attribute": [
+          {
+            "type": "ip-src",
+            "value": "192.168.1.1",
+            "uuid": "attr-uuid-1",
+            "category": "Network activity"
+          },
+          {
+            "type": "domain",
+            "value": "example-producer.com",
+            "uuid": "attr-uuid-2",
+            "category": "Network activity"
+          },
+          {
+            "type": "email-src",
+            "value": "producer@example.com",
+            "uuid": "attr-uuid-3",
+            "category": "Payload delivery"
+          }
+        ]
+      },
+      {
+        "id": "2",
+        "uuid": "uuid-producer-2",
+        "info": "Producer Event 2",
+        "date": "2023-10-02",
+        "threat_level_id": "2",
+        "orgc": {
+          "name": "Producer Organization"
+        },
+        "Attribute": [
+          {
+            "type": "ip-dst",
+            "value": "10.0.0.1",
+            "uuid": "attr-uuid-4",
+            "category": "Network activity"
+          },
+          {
+            "type": "email-dst",
+            "value": "victim@example.com",
+            "uuid": "attr-uuid-5",
+            "category": "Payload delivery"
+          },
+          {
+            "type": "filename",
+            "value": "malware.exe",
+            "uuid": "attr-uuid-6",
+            "category": "Artifacts dropped"
+          }
+        ]
+      },
+      {
+        "id": "3",
+        "uuid": "uuid-producer-3",
+        "info": "Producer Event 3",
+        "date": "2023-10-03",
+        "threat_level_id": "3",
+        "orgc": {
+          "name": "Producer Organization"
+        },
+        "Attribute": [
+          {
+            "type": "ip-src",
+            "value": "172.16.0.1",
+            "uuid": "attr-uuid-7",
+            "category": "Network activity"
+          },
+          {
+            "type": "domain",
+            "value": "another-example.com",
+            "uuid": "attr-uuid-8",
+            "category": "Network activity"
+          },
+          {
+            "type": "email-src",
+            "value": "alert@example.com",
+            "uuid": "attr-uuid-9",
+            "category": "Payload delivery"
+          }
+        ]
+      },
+      {
+        "id": "4",
+        "uuid": "uuid-producer-4",
+        "info": "Producer Event 4",
+        "date": "2023-10-04",
+        "threat_level_id": "3",
+        "orgc": {
+          "name": "Producer Organization"
+        },
+        "Attribute": [
+          {
+            "type": "ip-src",
+            "value": "192.168.1.1",
+            "uuid": "attr-uuid-10",
+            "category": "Network activity"
+          },
+          {
+            "type": "email-dst",
+            "value": "test@example.com",
+            "uuid": "attr-uuid-11",
+            "category": "Payload delivery"
+          },
+          {
+            "type": "filename",
+            "value": "trojan.exe",
+            "uuid": "attr-uuid-12",
+            "category": "Artifacts dropped"
+          },
+          {
+            "type": "email-src",
+            "value": "producer@example.com",
+            "uuid": "attr-uuid-34",
+            "category": "Payload delivery"
+          }
+        ]
+      },
+      {
+        "id": "5",
+        "uuid": "uuid-producer-5",
+        "info": "Producer Event 5",
+        "date": "2023-10-05",
+        "threat_level_id": "2",
+        "orgc": {
+          "name": "Producer Organization"
+        },
+        "Attribute": [
+          {
+            "type": "ip-src",
+            "value": "192.168.1.1",
+            "uuid": "attr-uuid-13",
+            "category": "Network activity"
+          },
+          {
+            "type": "domain",
+            "value": "example-test.com",
+            "uuid": "attr-uuid-14",
+            "category": "Network activity"
+          },
+          {
+            "type": "email-src",
+            "value": "notify@example.com",
+            "uuid": "attr-uuid-15",
+            "category": "Payload delivery"
+          }
+        ]
+      }
+    ]
+  }

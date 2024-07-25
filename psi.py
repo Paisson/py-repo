@@ -110,8 +110,10 @@ def main():
     graph_p = build_graph(events_p, psi)
     graph_c = build_graph(events_c, psi)
 
-    print(graph_p)
-    print(graph_c)
+    print(graph_p[1])
+
+    psi2 = compute_private_graph_intersection(graph_p[1], graph_c[1])
+    print(psi2)
 
 if __name__ == "__main__":
     main()
